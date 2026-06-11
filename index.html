@@ -1,0 +1,1325 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Curve Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#090d16',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155'
+                        },
+                        emerald: {
+                            500: '#10b981',
+                            400: '#34d399'
+                        },
+                        indigo: {
+                            500: '#6366f1',
+                            400: '#818cf8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full flex flex-col font-sans text-xs">
+
+    <!-- HEADER -->
+    <header class="bg-slate-900 border-b border-slate-800 px-5 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+        <div class="flex items-center gap-3">
+            <div class="p-1.5 bg-emerald-500/10 rounded-lg text-emerald-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            </div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-white">Growth Curve Intelligence</h1>
+                <p class="text-[10px] text-slate-400">Data-Driven Corporate Lifecycle Analytics</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <!-- Manual CSV Loader Button -->
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400">Database Source:</span>
+                <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
+                <button onclick="document.getElementById('csv-file-input').click()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg transition-all">
+                    Load CSV File
+                </button>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400">Select Company:</span>
+                <select id="company-selector" onchange="loadCompanyData(this.value)" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg focus:ring-emerald-500 focus:border-emerald-500 p-2 outline-none cursor-pointer">
+                    <option value="">Awaiting CSV Database...</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOP REFERENCE MANUAL -->
+    <section class="max-w-7xl w-full mx-auto px-5 pt-4">
+        <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-sm space-y-2.5">
+            <div class="flex items-center gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                S-Curve Corporate Lifecycle Reference Manual (Annual Edition)
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-[11px]">
+                <div class="border-r border-slate-800/60 pr-2">
+                    <span class="font-bold text-emerald-400 block mb-0.5">Phase 1: Early Acceleration</span>
+                    <span class="text-[9px] text-slate-400 block mb-1">Scale: 0% - 35% of Peak</span>
+                    <p class="text-[10px] text-slate-400 leading-normal">Slow absolute revenue accumulation with high initial R&D and product incubation. Percentage growth is high, but dollar additions are small.</p>
+                </div>
+                <div class="border-r border-slate-800/60 pr-2">
+                    <span class="font-bold text-emerald-400 block mb-0.5">Phase 2: Mid-Inflection Transition</span>
+                    <span class="text-[9px] text-slate-400 block mb-1">Scale: 35% - 50% of Peak</span>
+                    <p class="text-[10px] text-slate-400 leading-normal">Steep exponential climb. The business reaches its Inflection Point (maximum velocity midpoint) and unlocks maximum operating leverage.</p>
+                </div>
+                <div class="border-r border-slate-800/60 pr-2">
+                    <span class="font-bold text-amber-400 block mb-0.5">Phase 3: Post-Inflection Decel</span>
+                    <span class="text-[9px] text-slate-400 block mb-1">Scale: 50% - 85% of Peak</span>
+                    <p class="text-[10px] text-slate-400 leading-normal">Growth velocity mathematically transitions from acceleration to deceleration as addressable markets saturate and market penetration deepens.</p>
+                </div>
+                <div>
+                    <span class="font-bold text-indigo-400 block mb-0.5">Phase 4: Saturated Maturity</span>
+                    <span class="text-[9px] text-slate-400 block mb-1">Scale: 85%+ of Peak</span>
+                    <p class="text-[10px] text-slate-400 leading-normal">The S-curve flattens out. Revenue scale operates close to carrying capacity (L). Further expansion relies on pricing power or secondary S-Curves.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN BODY -->
+    <main class="flex-1 p-4 overflow-y-auto max-w-7xl w-full mx-auto flex flex-col gap-4">
+
+        <!-- GLOBAL SELF-DIAGNOSTIC ERROR BOX -->
+        <div id="error-display" class="hidden bg-red-950 border-2 border-red-800 text-red-200 p-4 rounded-xl font-mono text-xs shadow-lg space-y-2">
+            <div class="flex items-center gap-2 text-red-400 font-bold text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                Active Browser Diagnostic Error Detected:
+            </div>
+            <pre id="error-text" class="whitespace-pre-wrap pl-6 text-[10px] leading-relaxed"></pre>
+        </div>
+
+        <!-- TWO-COLUMN WORKSTATION LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            
+            <!-- LEFT COLUMN: Profile Sidebar -->
+            <section class="lg:col-span-4 flex flex-col gap-4">
+
+                <!-- Milestones Timeline -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col max-h-[290px]">
+                    <h3 class="text-xs font-bold text-white mb-1.5 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Milestones Timeline
+                    </h3>
+                    <p class="text-slate-400 text-[9px] mb-1.5 italic">Click cards to highlight on S-Curve</p>
+                    <div id="milestones-timeline" class="space-y-1 overflow-y-auto max-h-[160px] flex-1 pr-1">
+                        <p class="text-slate-400 text-xs">Load CSV data to inspect milestones.</p>
+                    </div>
+                </div>
+
+                <!-- Diagnostics & Curve Narrative -->
+                <div id="narrative-card" class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            Diagnostics & Curve Narrative
+                        </h3>
+                        <p class="text-[9px] text-slate-400 mb-3">Qualitative lifecycle synthesis driven by non-linear regression models</p>
+                        
+                        <div id="narrative-content" class="text-[11px] text-slate-300 space-y-3.5">
+                            <p class="text-slate-400 italic">Load CSV database to compile model narrative...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: Dynamic Feedback & Ticker Request Box -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                    <h3 class="text-xs font-bold text-white mb-1.5 flex items-center gap-1.5 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                        Feedback & Ticker Requests
+                    </h3>
+                    <p class="text-[9px] text-slate-400 mb-3">Request new stock tickers or suggest dashboard improvements</p>
+                    
+                    <!-- FormSubmit static endpoint config -->
+                    <form action="https://formsubmit.co/cezarjj@gmail.com" method="POST" target="_blank" class="space-y-2">
+                        <input type="hidden" name="_captcha" value="false">
+                        
+                        <div>
+                            <label class="text-[8px] text-slate-400 uppercase font-bold block mb-1">Your Email (Optional)</label>
+                            <input type="email" name="email" placeholder="email@example.com" class="w-full bg-slate-950 border border-slate-800 text-white rounded p-1.5 text-[10px] focus:border-emerald-500 outline-none">
+                        </div>
+                        
+                        <div>
+                            <label class="text-[8px] text-slate-400 uppercase font-bold block mb-1">Requested Companies & Suggestions</label>
+                            <textarea name="message" rows="3" required placeholder="e.g., Please add AAPL, GOOG. Also, we could add..." class="w-full bg-slate-950 border border-slate-800 text-white rounded p-1.5 text-[10px] focus:border-emerald-500 outline-none resize-none"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-1.5 px-3 rounded text-[10px] transition-all">
+                            Submit Request
+                        </button>
+                    </form>
+                </div>
+
+            </section>
+
+            <!-- RIGHT COLUMN: S-Curve Chart, Margin Chart, KPI Row, and Raw Statements Table -->
+            <section class="lg:col-span-8 flex flex-col gap-4">
+                
+                <!-- S-Curve Chart -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between relative">
+                    <div class="flex items-center justify-between mb-2">
+                        <div>
+                            <h3 class="text-xs font-bold text-white">Historical S-Curve Fitting</h3>
+                            <p class="text-[9px] text-slate-400">Actual Revenue vs. Logistic Fit</p>
+                        </div>
+                        <div class="flex items-center gap-3 text-[9px] text-slate-400">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-1 bg-emerald-500 rounded"></span>Act</span>
+                            <span id="legend-fit-item" class="flex items-center gap-1"><span class="w-2.5 h-1 border-t border-dashed border-indigo-400"></span>Fit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative w-full h-[250px] md:h-[300px] lg:h-[320px] mx-auto">
+                        
+                        <!-- Floating Metadata Box Overlay -->
+                        <div class="absolute top-2 left-16 z-10 bg-slate-950/85 backdrop-blur-md border border-slate-800/80 rounded-lg p-2.5 shadow-lg max-w-[180px] pointer-events-none">
+                            <h2 id="meta-name" class="text-[10px] font-bold text-white truncate leading-tight">Awaiting Database</h2>
+                            <p id="meta-ticker" class="text-[9px] text-emerald-400 font-semibold mb-1 truncate">---</p>
+                            <div class="space-y-1 text-[9px] text-slate-300 leading-none">
+                                <div class="flex justify-between gap-4 border-b border-slate-800/60 pb-0.5">
+                                    <span class="text-slate-400">Sector</span>
+                                    <span id="meta-sector" class="font-medium truncate max-w-[80px]">---</span>
+                                </div>
+                                <div class="flex justify-between gap-4 border-b border-slate-800/60 pb-0.5">
+                                    <span class="text-slate-400">Industry</span>
+                                    <span id="meta-industry" class="font-medium text-right truncate max-w-[80px]">---</span>
+                                </div>
+                                <div class="flex justify-between gap-4 border-b border-slate-800/60 pb-0.5">
+                                    <span class="text-slate-400">IPO Date</span>
+                                    <span id="meta-ipo" class="font-medium">---</span>
+                                </div>
+                                <div class="flex justify-between gap-4">
+                                    <span class="text-slate-400 font-semibold">S-Curve Fit</span>
+                                    <span id="meta-r2" class="font-bold text-indigo-400">---</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Canvas layer sits underneath -->
+                        <canvas id="scurve-chart" class="z-0"></canvas>
+                    </div>
+                </div>
+
+                <!-- Margins Chart -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <div>
+                            <h3 class="text-xs font-bold text-white">Efficiency Margins</h3>
+                            <p class="text-[9px] text-slate-400">Gross, Cash Operating, and FCF Margins</p>
+                        </div>
+                    </div>
+                    <div class="relative w-full h-[250px] md:h-[300px] lg:h-[320px] mx-auto">
+                        <canvas id="margins-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side KPI and Analog Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- KPI Performance Block -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                        <h4 class="text-[10px] font-bold text-white mb-2.5 flex items-center gap-1.5 text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                            Latest Operating Performance
+                        </h4>
+                        <div class="grid grid-cols-2 gap-2 text-center text-[10px] flex-1">
+                            <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-800 flex flex-col justify-center">
+                                <span class="text-[9px] text-slate-400 block uppercase">Gross Margin</span>
+                                <span id="kpi-gm" class="font-black text-white text-xs">---</span>
+                            </div>
+                            <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-800 flex flex-col justify-center">
+                                <span class="text-[9px] text-slate-400 block uppercase">Cash Oper Margin</span>
+                                <span id="kpi-om" class="font-black text-emerald-400 text-xs">---</span>
+                            </div>
+                            <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-800 flex flex-col justify-center">
+                                <span class="text-[9px] text-slate-400 block uppercase">FCF Margin</span>
+                                <span id="kpi-fcf" class="font-black text-amber-500 text-xs">---</span>
+                            </div>
+                            <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-800 flex flex-col justify-center">
+                                <span class="text-[9px] text-slate-400 block uppercase">Rule of 40</span>
+                                <span id="kpi-r40" class="font-black text-indigo-400 text-xs">---</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Most Similar Historical Analog -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                        <h4 class="text-[10px] font-bold text-white mb-2.5 flex items-center gap-1.5 text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.33-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.33-4z" /></svg>
+                            Most Similar Historical Analog (Top Match)
+                        </h4>
+                        <div id="analogs-container" class="flex-1 flex flex-col justify-center">
+                            <p class="text-slate-400 text-center text-xs py-4">Awaiting CSV database...</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- RAW FINANCIAL STATEMENTS TABLE (SPANS 12 COLUMNS) -->
+            <section class="lg:col-span-12">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
+                    <h3 class="text-xs font-bold text-white mb-2.5 flex items-center gap-1.5 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        Annual Historical Financial Statement Summary ($ Millions)
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-[10px] text-slate-300 border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-slate-400 text-left">
+                                    <th class="py-1.5 px-2">Year</th>
+                                    <th class="py-1.5 px-2 text-right">Revenue ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Gross Profit ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Net Income ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Diluted EPS</th>
+                                    <th class="py-1.5 px-2 text-right">Op. Cash Flow ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">CapEx ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Free Cash Flow ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Total Cash ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Total Debt ($M)</th>
+                                    <th class="py-1.5 px-2 text-right">Total Equity ($M)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financials-table-body">
+                                <tr>
+                                    <td colspan="11" class="py-4 text-center text-slate-500 italic">Load CSV data to inspect financial tables.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 5 (Span All): FORMULA REFERENCE GUIDE -->
+            <section class="lg:col-span-12 bg-slate-900/40 border border-slate-800/40 rounded-xl p-5 text-slate-400 space-y-3.5">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a1 1 0 00-.707.293l-4 4a1 1 0 000 1.414l4 4a1 1 0 001.414-1.414L5.414 7H11a1 1 0 100-2H5.414l2.293-2.293A1 1 0 007 2zm0 14a1 1 0 000-2H5.414l2.293-2.293a1 1 0 10-1.414-1.414l-4 4a1 1 0 000 1.414l4 4a1 1 0 001.414-1.414L5.414 13H11a1 1 0 100-2H5.414l2.293-2.293A1 1 0 007 16z" clip-rule="evenodd" /></svg>
+                    Applied S-Curve Curve Modeling Formulas
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-[10px] leading-relaxed">
+                    <div class="space-y-2 bg-slate-950/25 p-4 rounded-lg border border-slate-800/40">
+                        <svg class="w-full h-14 bg-slate-950/80 rounded border border-slate-800/60 mb-1.5 p-1" viewBox="0 0 100 40">
+                            <line x1="0" y1="20" x2="100" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            <path d="M 10,35 Q 35,35 50,20 T 90,5" fill="none" stroke="#6366f1" stroke-width="2" />
+                            <circle cx="50" cy="20" r="2.5" fill="#10b981" />
+                            <text x="54" y="22" fill="#10b981" font-size="5" font-family="monospace" font-weight="bold">Inflection (50%)</text>
+                        </svg>
+                        <span class="font-bold text-slate-300 block">1. 3-Parameter Logistic Model (Symmetric)</span>
+                        <p class="text-indigo-400 font-mono text-center my-1 bg-slate-950/40 p-1.5 rounded text-[9px]">y(t) = L / (1 + e^(-k * (t - t0)))</p>
+                        <p>Our default standard. Assumes growth is symmetric around a midpoint inflection ($t_0$) where the curve climbs steepest before flattening out toward carrying capacity ($L$), governed by scaling steepness ($k$). <strong class="text-indigo-300">Unlike other curves, its symmetric path forces the inflection midpoint to occur at exactly 50% of peak capacity, assuming identical ramp-up and maturity deceleration rates.</strong></p>
+                    </div>
+                    <div class="space-y-2 bg-slate-950/25 p-4 rounded-lg border border-slate-800/40">
+                        <svg class="w-full h-14 bg-slate-950/80 rounded border border-slate-800/60 mb-1.5 p-1" viewBox="0 0 100 40">
+                            <line x1="0" y1="24" x2="100" y2="24" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            <path d="M 10,35 C 30,35 40,26 45,19 C 50,12 65,5 90,5" fill="none" stroke="#6366f1" stroke-width="2" />
+                            <circle cx="45" cy="19" r="2.5" fill="#fbbf24" />
+                            <text x="49" y="21" fill="#fbbf24" font-size="5" font-family="monospace" font-weight="bold">Inflection (37%)</text>
+                        </svg>
+                        <span class="font-bold text-slate-300 block">2. Gompertz Growth Model (Asymmetric)</span>
+                        <p class="text-slate-500 font-mono text-center my-1 bg-slate-950/40 p-1.5 rounded text-[9px]">y(t) = L * e^(-e^(-k * (t - t0)))</p>
+                        <p>An alternative asymmetric model. Unlike the symmetric Logistic curve, a Gompertz curve assumes a company approaches its ultimate maturity ceiling ($L$) much slower than it departed from its origin. <strong class="text-amber-300">Unlike the symmetric logistic curve, its asymmetric design places the inflection point lower (at ~36.8%), mapping real-world markets that mature much slower than they initially scale.</strong></p>
+                    </div>
+                    <div class="space-y-2 bg-slate-950/25 p-4 rounded-lg border border-slate-800/40">
+                        <svg class="w-full h-14 bg-slate-950/80 rounded border border-slate-800/60 mb-1.5 p-1" viewBox="0 0 100 40">
+                            <path d="M 10,35 Q 50,15 90,35" fill="none" stroke="rgba(162, 28, 175, 0.4)" stroke-width="1" stroke-dasharray="2 2" />
+                            <path d="M 10,35 C 25,35 40,28 50,20 C 60,12 75,5 90,5" fill="none" stroke="#6366f1" stroke-width="2" />
+                            <circle cx="50" cy="20" r="2.5" fill="#a21caf" />
+                            <text x="54" y="22" fill="#a21caf" font-size="5" font-family="monospace" font-weight="bold">Adoption Peak</text>
+                        </svg>
+                        <span class="font-bold text-slate-300 block">3. Bass Diffusion Model (Innovation/Imitation)</span>
+                        <p class="text-slate-500 font-mono text-center my-1 bg-slate-950/40 p-1.5 rounded text-[9px]">f(t) = [p + q*F(t)] * [1 - F(t)]</p>
+                        <p>Models consumer product adoption rates based on two components: coefficient of innovation ($p$, early independent adopters) and coefficient of imitation ($q$, late-stage peer adopters copying early users). <strong class="text-fuchsia-300">Unlike pure trend-fitting models, this equation explicitly splits customer adoption into separate innovator and imitator channels to model physical word-of-mouth market momentum.</strong></p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 text-center py-3 text-[10px] text-slate-500">
+        Growth Curve Intelligence Platform Dashboard &copy; 2026.
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LAYER -->
+    <script>
+        // Global variables holding parsed CSV datasets
+        let GLOBAL_DATA = [];
+        
+        let scurveChartInstance = null;
+        let marginsChartInstance = null;
+
+        // Realistic pre-loaded sample dataset for "NOW" (ServiceNow) to populate dashboard instantly on load
+        const SAMPLE_CSV = `Ticker,Fiscal_Year,Period_End_Date,Revenue_Millions_USD,Cost_Of_Revenue_Millions_USD,Gross_Profit_Millions_USD,Net_Income_Millions_USD,Diluted_Shares_Millions,Diluted_EPS_USD,Operating_Cash_Flow_Millions_USD,CapEx_Millions_USD,Free_Cash_Flow_Millions_USD,Total_Cash_Millions_USD,Total_Current_Assets_Millions_USD,Total_Current_Liabilities_Millions_USD,Working_Capital_Millions_USD,Total_Debt_Millions_USD,Total_Assets_Millions_USD,Total_Liabilities_Millions_USD,Total_Equity_Millions_USD,Goodwill_And_Intangibles_Millions_USD,Data_Source
+NOW,2018,2018-12-31,2609.1,595.6,2013.5,-26.8,185.0,-0.15,793.4,153.2,640.2,1652.5,1822.4,1681.3,141.1,0.0,2831.3,2512.4,318.9,321.4,SEC EDGAR
+NOW,2019,2019-12-31,3460.0,774.0,2686.0,627.0,191.0,3.28,1118.0,182.0,936.0,2301.0,2504.0,2112.0,392.0,0.0,3902.0,3124.0,778.0,412.0,SEC EDGAR
+NOW,2020,2020-12-31,4460.0,996.0,3464.0,119.0,198.0,0.6,1780.0,224.0,1556.0,3102.0,3402.0,2804.0,598.0,1500.0,5802.0,4901.0,901.0,511.0,SEC EDGAR
+NOW,2021,2021-12-31,5896.0,1312.0,4584.0,230.0,202.0,1.14,2214.0,298.0,1916.0,4204.0,4601.0,3612.0,989.0,1500.0,7902.0,6210.0,1692.0,612.0,SEC EDGAR
+NOW,2022,2022-12-31,7245.0,1560.0,5685.0,325.0,205.0,1.59,2712.0,341.0,2371.0,4912.0,5412.0,4210.0,1202.0,1500.0,10204.0,7812.0,2392.0,715.0,SEC EDGAR
+NOW,2023,2023-12-31,8971.0,1912.0,7059.0,1730.0,208.0,8.32,3392.0,412.0,2980.0,6214.0,6810.0,5102.0,1708.0,1500.0,13402.0,9204.0,4200.0,891.0,SEC EDGAR
+NOW,2024,2024-12-31,10961.0,2312.0,8649.0,2112.0,211.0,10.01,4112.0,498.0,3614.0,7912.0,8412.0,6214.0,2198.0,1500.0,17412.0,11102.0,6310.0,1102.0,SEC EDGAR
+NOW,2025,2025-12-31,13210.0,2780.0,10430.0,2680.0,214.0,12.52,5010.0,580.0,4430.0,9810.0,10210.0,7412.0,2800.0,1500.0,21912.0,13102.0,8810.0,1312.0,SEC EDGAR`;
+
+        // Static metadata definitions for monitored tickers
+        const TICKER_METADATA = {
+            "CRM": { name: "Salesforce, Inc.", sector: "Technology", industry: "Software—Application", ipo: "2004" },
+            "SOFI": { name: "SoFi Technologies, Inc.", sector: "Financial Services", industry: "Credit Services", ipo: "2020" },
+            "MSFT": { name: "Microsoft Corporation", sector: "Technology", industry: "Software—Infrastructure", ipo: "1986" },
+            "AMZN": { name: "Amazon.com, Inc.", sector: "Consumer Cyclical", industry: "Internet Retail", ipo: "1997" },
+            "ZETA": { name: "Zeta Global Holdings Corp.", sector: "Technology", industry: "Software—Application", ipo: "2021" },
+            "AVGO": { name: "Broadcom Inc.", sector: "Technology", industry: "Semiconductors", ipo: "2009" },
+            "BEAM": { name: "Beam Therapeutics Inc.", sector: "Healthcare", industry: "Biotechnology", ipo: "2020" },
+            "HOOD": { name: "Robinhood Markets, Inc.", sector: "Financial Services", industry: "Capital Markets", ipo: "2021" },
+            "TSLA": { name: "Tesla, Inc.", sector: "Consumer Cyclical", industry: "Auto Manufacturers", ipo: "2010" },
+            "RKLB": { name: "Rocket Lab USA, Inc.", sector: "Industrials", industry: "Aerospace & Defense", ipo: "2021" },
+            "ORCL": { name: "Oracle Corporation", sector: "Technology", industry: "Software—Infrastructure", ipo: "1986" },
+            "APLD": { name: "Applied Digital Corporation", sector: "Technology", industry: "Software—Infrastructure", ipo: "2022" },
+            "QCOM": { name: "QUALCOMM Incorporated", sector: "Technology", industry: "Semiconductors", ipo: "1991" },
+            "IBM": { name: "International Business Machines Corp.", sector: "Technology", industry: "Information Technology Services", ipo: "1916" },
+            "PYPL": { name: "PayPal Holdings, Inc.", sector: "Financial Services", industry: "Credit Services", ipo: "2015" },
+            "NOW": { name: "ServiceNow, Inc.", sector: "Technology", industry: "Software—Application", ipo: "2012" },
+            "MKSI": { name: "MKS Instruments, Inc.", sector: "Technology", industry: "Scientific & Technical Instruments", ipo: "1999" },
+            "AMTM": { name: "Amentum Holdings, Inc.", sector: "Industrials", industry: "Aerospace & Defense", ipo: "2024" },
+            "COHR": { name: "Coherent Corp.", sector: "Technology", industry: "Scientific & Technical Instruments", ipo: "1987" },
+            "VRTX": { name: "Vertex Pharmaceuticals Inc.", sector: "Healthcare", industry: "Biotechnology", ipo: "1991" },
+            "SNOW": { name: "Snowflake Inc.", sector: "Technology", industry: "Software—Application", ipo: "2020" },
+            "SYM": { name: "Symbotic Inc.", sector: "Industrials", industry: "Industrial Machinery", ipo: "2022" },
+            "ADBE": { name: "Adobe Inc.", sector: "Technology", industry: "Software—Infrastructure", ipo: "1986" },
+            "MU": { name: "Micron Technology, Inc.", sector: "Technology", industry: "Semiconductors", ipo: "1984" },
+            "SMCI": { name: "Super Micro Computer, Inc.", sector: "Technology", industry: "Computer Hardware", ipo: "2007" },
+            "FLNC": { name: "Fluence Energy, Inc.", sector: "Technology", industry: "Electrical Equipment & Parts", ipo: "2021" },
+            "ENPH": { name: "Enphase Energy, Inc.", sector: "Technology", industry: "Solar", ipo: "2012" },
+            "TSM": { name: "Taiwan Semiconductor Manufacturing Co.", sector: "Technology", industry: "Semiconductors", ipo: "1997" },
+            "META": { name: "Meta Platforms, Inc.", sector: "Technology", industry: "Internet Content & Information", ipo: "2012" },
+            "MRVL": { name: "Marvell Technology, Inc.", sector: "Technology", industry: "Semiconductors", ipo: "2000" },
+            "ASX": { name: "ASE Technology Holding Co., Ltd.", sector: "Technology", industry: "Semiconductors", ipo: "2018" },
+            "AMKR": { name: "Amkor Technology, Inc.", sector: "Technology", industry: "Semiconductors", ipo: "1998" },
+            "GEV": { name: "GE Vernova Inc.", sector: "Industrials", industry: "Electrical Equipment & Parts", ipo: "2024" },
+            "GLW": { name: "Corning Incorporated", sector: "Technology", industry: "Electronic Components", ipo: "1945" },
+            "KLIC": { name: "Kulicke and Soffa Industries, Inc.", sector: "Technology", industry: "Semiconductor Equipment & Materials", ipo: "1961" },
+            "AMD": { name: "Advanced Micro Devices, Inc.", sector: "Technology", industry: "Semiconductors", ipo: "1972" },
+            "FJTSY": { name: "Fujitsu Limited (ADR)", sector: "Technology", industry: "Information Technology Services", ipo: "1996" },
+            "NVDA": { name: "NVIDIA Corporation", sector: "Technology", industry: "Semiconductors", ipo: "1999" },
+            "PLTR": { name: "Palantir Technologies Inc.", sector: "Technology", industry: "Software—Application", ipo: "2020" },
+            "INTC": { name: "Intel Corporation", sector: "Technology", industry: "Semiconductors", ipo: "1971" },
+            "VRT": { name: "Vertiv Holdings Co", sector: "Industrials", industry: "Electrical Equipment & Parts", ipo: "2018" },
+            "FUWAY": { name: "Furukawa Electric Co., Ltd. (ADR)", sector: "Industrials", industry: "Electrical Equipment & Parts", ipo: "1999" }
+        };
+
+        // Safe decimal to percentage formatter helper
+        function formatPercent(val) {
+            if (val === null || val === undefined || isNaN(val)) return "N/A";
+            return `${(val * 100).toFixed(1)}%`;
+        }
+
+        function reportError(type, message) {
+            const display = document.getElementById("error-display");
+            const text = document.getElementById("error-text");
+            display.classList.remove("hidden");
+            text.innerText += `\n[${type}]: ${message}`;
+        }
+
+        window.onerror = function(msg, url, line) {
+            reportError("JavaScript Exception", `${msg} (Line ${line} inside ${url})`);
+            return false;
+        };
+
+        // Manual upload event handler
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                processCSVText(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+
+        // Standard CSV Parser
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/);
+            if (lines.length === 0) return [];
+            
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+            const result = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const row = [];
+                let inQuotes = false;
+                let current = "";
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(current.trim());
+                        current = "";
+                    } else {
+                        current += char;
+                    }
+                }
+                row.push(current.trim());
+                
+                if (row.length === headers.length) {
+                    const obj = {};
+                    headers.forEach((header, idx) => {
+                        let val = row[idx].replace(/^"|"$/g, '');
+                        if (val === "" || val === "None" || val === "null") {
+                            obj[header] = null;
+                        } else if (!isNaN(val)) {
+                            obj[header] = Number(val);
+                        } else {
+                            obj[header] = val;
+                        }
+                    });
+                    result.push(obj);
+                }
+            }
+            return result;
+        }
+
+        function processCSVText(text) {
+            try {
+                GLOBAL_DATA = parseCSV(text);
+                if (GLOBAL_DATA.length === 0) {
+                    throw new Error("CSV parsed into an empty dataset.");
+                }
+
+                // Get unique tickers
+                const tickers = [...new Set(GLOBAL_DATA.map(row => row.Ticker))].sort();
+                
+                const selector = document.getElementById("company-selector");
+                selector.innerHTML = "";
+                
+                tickers.forEach(ticker => {
+                    const meta = TICKER_METADATA[ticker] || { name: "Corporate Entity", sector: "Other", industry: "Other", ipo: "N/A" };
+                    const opt = document.createElement("option");
+                    opt.value = ticker;
+                    opt.innerText = `${ticker} - ${meta.name}`;
+                    selector.appendChild(opt);
+                });
+
+                if (tickers.length > 0) {
+                    const defaultTicker = tickers.includes("NOW") ? "NOW" : tickers[0];
+                    selector.value = defaultTicker;
+                    loadCompanyData(defaultTicker);
+                }
+            } catch (err) {
+                reportError("CSV Parsing Error", `Could not read formatted CSV data. Details: ${err.message}`);
+            }
+        }
+
+        // Automatic fetch loader with static local fallback
+        window.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const response = await fetch("growth_curve_data.csv");
+                if (response.ok) {
+                    const text = await response.text();
+                    processCSVText(text);
+                } else {
+                    console.log("Auto-fetch empty or failed. Loading pre-configured sample data...");
+                    processCSVText(SAMPLE_CSV);
+                }
+            } catch (e) {
+                console.log("CORS/network blocker on auto-fetch. Loading pre-configured sample data...");
+                processCSVText(SAMPLE_CSV);
+            }
+        });
+
+        // 3-Parameter Symmetric Logistic Curve Solver (Grid Search + Local Hill Climb)
+        function fitLogisticSCurve(xs, ys) {
+            const n = xs.length;
+            if (n < 3) {
+                return { L: null, t0: null, k: null, fitted: Array(n).fill(null), r2: null };
+            }
+
+            const maxY = Math.max(...ys);
+            
+            // Step 1: Broad Param Search Space Boundaries
+            const minL = maxY;
+            const maxL = maxY * 3;
+            const mink = 0.05;
+            const maxk = 1.0;
+            const mint0 = xs[0];
+            const maxt0 = xs[n - 1];
+
+            let bestL = maxY * 1.2;
+            let bestK = 0.2;
+            let bestT0 = xs[Math.floor(n / 2)];
+            let minSSE = Infinity;
+
+            const gridSteps = 10;
+            for (let i = 0; i <= gridSteps; i++) {
+                const L = minL + (maxL - minL) * (i / gridSteps);
+                for (let j = 0; j <= gridSteps; j++) {
+                    const k = mink + (maxk - mink) * (j / gridSteps);
+                    for (let h = 0; h <= gridSteps; h++) {
+                        const t0 = mint0 + (maxt0 - mint0) * (h / gridSteps);
+
+                        let sse = 0;
+                        for (let p = 0; p < n; p++) {
+                            const pred = L / (1 + Math.exp(-k * (xs[p] - t0)));
+                            sse += Math.pow(ys[p] - pred, 2);
+                        }
+
+                        if (sse < minSSE) {
+                            minSSE = sse;
+                            bestL = L;
+                            bestK = k;
+                            bestT0 = t0;
+                        }
+                    }
+                }
+            }
+
+            // Step 2: Hill Climbing Refinement
+            let stepL = (maxL - minL) / 20;
+            let stepK = (maxk - mink) / 20;
+            let stepT0 = (maxt0 - mint0) / 20;
+
+            for (let iter = 0; iter < 100; iter++) {
+                let improved = false;
+                const candidates = [
+                    { L: bestL + stepL, k: bestK, t0: bestT0 },
+                    { L: bestL - stepL, k: bestK, t0: bestT0 },
+                    { L: bestL, k: bestK + stepK, t0: bestT0 },
+                    { L: bestL, k: bestK - stepK, t0: bestT0 },
+                    { L: bestL, k: bestK, t0: bestT0 + stepT0 },
+                    { L: bestL, k: bestK, t0: bestT0 - stepT0 }
+                ];
+
+                for (const cand of candidates) {
+                    if (cand.L < maxY || cand.k <= 0) continue;
+                    let sse = 0;
+                    for (let p = 0; p < n; p++) {
+                        const pred = cand.L / (1 + Math.exp(-cand.k * (xs[p] - cand.t0)));
+                        sse += Math.pow(ys[p] - pred, 2);
+                    }
+                    if (sse < minSSE) {
+                        minSSE = sse;
+                        bestL = cand.L;
+                        bestK = cand.k;
+                        bestT0 = cand.t0;
+                        improved = true;
+                    }
+                }
+                if (!improved) {
+                    stepL *= 0.5;
+                    stepK *= 0.5;
+                    stepT0 *= 0.5;
+                }
+            }
+
+            // Calculate R2 and fitted curve array
+            const meanY = ys.reduce((a, b) => a + b, 0) / n;
+            let sst = 0;
+            const fitted = [];
+            for (let p = 0; p < n; p++) {
+                const pred = bestL / (1 + Math.exp(-bestK * (xs[p] - bestT0)));
+                fitted.push(pred);
+                sst += Math.pow(ys[p] - meanY, 2);
+            }
+
+            const r2 = sst > 0 ? 1 - (minSSE / sst) : 0;
+            return {
+                L: bestL,
+                t0: bestT0,
+                k: bestK,
+                fitted: fitted,
+                r2: r2
+            };
+        }
+
+        // Dynamically identifies closest database neighbors via Manhattan margins distance
+        function findMostSimilarAnalog(ticker, avgGM, avgOM, avgFCFM) {
+            const otherTickers = [...new Set(GLOBAL_DATA.map(row => row.Ticker))].filter(t => t !== ticker);
+            let bestAnalog = null;
+            let bestScore = -Infinity;
+
+            otherTickers.forEach(other => {
+                const otherRows = GLOBAL_DATA.filter(row => row.Ticker === other).sort((a, b) => a.Fiscal_Year - b.Fiscal_Year);
+                if (otherRows.length === 0) return;
+
+                let otherGM = 0, otherOM = 0, otherFCFM = 0;
+                otherRows.forEach(row => {
+                    otherGM += row.Revenue_Millions_USD > 0 ? row.Gross_Profit_Millions_USD / row.Revenue_Millions_USD : 0;
+                    otherOM += row.Revenue_Millions_USD > 0 ? row.Operating_Cash_Flow_Millions_USD / row.Revenue_Millions_USD : 0;
+                    otherFCFM += row.Revenue_Millions_USD > 0 ? row.Free_Cash_Flow_Millions_USD / row.Revenue_Millions_USD : 0;
+                });
+                otherGM /= otherRows.length;
+                otherOM /= otherRows.length;
+                otherFCFM /= otherRows.length;
+
+                // Manhattan absolute distance calculation
+                const distance = Math.abs(avgGM - otherGM) + Math.abs(avgOM - otherOM) + Math.abs(avgFCFM - otherFCFM);
+                const score = Math.max(0, 100 - (distance * 100));
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    const latestRow = otherRows[otherRows.length - 1];
+                    const priorRow = otherRows.length > 1 ? otherRows[otherRows.length - 2] : null;
+                    const growth = priorRow && priorRow.Revenue_Millions_USD > 0 
+                        ? (latestRow.Revenue_Millions_USD - priorRow.Revenue_Millions_USD) / priorRow.Revenue_Millions_USD 
+                        : 0;
+
+                    bestAnalog = {
+                        ticker: other,
+                        fiscal_year: latestRow.Fiscal_Year,
+                        fiscal_period: "FY",
+                        similarity_score: score,
+                        revenue_growth_yoy: growth,
+                        gross_margin: otherGM,
+                        operating_margin: otherOM,
+                        fcf_margin: otherFCFM
+                    };
+                }
+            });
+
+            return bestAnalog ? [bestAnalog] : [];
+        }
+
+        function renderFinancialsTable(ticker) {
+            const tbody = document.getElementById("financials-table-body");
+            tbody.innerHTML = "";
+
+            // Display in descending year order for corporate accounting audit views
+            const rawRows = GLOBAL_DATA.filter(row => row.Ticker === ticker).sort((a, b) => b.Fiscal_Year - a.Fiscal_Year);
+            
+            rawRows.forEach(row => {
+                const tr = document.createElement("tr");
+                tr.className = "border-b border-slate-800/40 hover:bg-slate-800/20";
+                
+                const formatNum = (val) => val !== null && val !== undefined ? val.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1}) : "---";
+                const formatEPS = (val) => val !== null && val !== undefined ? `$${val.toFixed(2)}` : "---";
+
+                tr.innerHTML = `
+                    <td class="py-1.5 px-2 font-bold text-white">${row.Fiscal_Year}</td>
+                    <td class="py-1.5 px-2 text-right text-emerald-400 font-semibold">$${formatNum(row.Revenue_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right">$${formatNum(row.Gross_Profit_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right">$${formatNum(row.Net_Income_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right font-medium text-slate-100">${formatEPS(row.Diluted_EPS_USD)}</td>
+                    <td class="py-1.5 px-2 text-right">$${formatNum(row.Operating_Cash_Flow_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right">$${formatNum(row.CapEx_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right text-amber-500 font-semibold">$${formatNum(row.Free_Cash_Flow_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right">$${formatNum(row.Total_Cash_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right">$${formatNum(row.Total_Debt_Millions_USD)}</td>
+                    <td class="py-1.5 px-2 text-right font-medium text-slate-100">$${formatNum(row.Total_Equity_Millions_USD)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Main Loader
+        async function loadCompanyData(ticker) {
+            if (!ticker || GLOBAL_DATA.length === 0) return;
+            
+            document.getElementById("error-display").classList.add("hidden");
+            document.getElementById("error-text").innerText = "";
+
+            try {
+                // Filter and sort the loaded data ascending by fiscal year
+                const rawRows = GLOBAL_DATA.filter(row => row.Ticker === ticker).sort((a, b) => a.Fiscal_Year - b.Fiscal_Year);
+                if (rawRows.length === 0) throw new Error(`No financial rows found in CSV for ticker: ${ticker}`);
+
+                const meta = TICKER_METADATA[ticker] || { name: `${ticker} Corporation`, sector: "Industrials", industry: "Diversified", ipo: "N/A" };
+
+                // Build aligned chart dataset
+                const chart_data = [];
+                const xs = []; // index years since IPO sequence
+                const ys = []; // absolute revenues
+
+                rawRows.forEach((row, idx) => {
+                    const prevRow = idx > 0 ? rawRows[idx - 1] : null;
+                    
+                    const rev = row.Revenue_Millions_USD * 1000000;
+                    const prevRev = prevRow ? prevRow.Revenue_Millions_USD * 1000000 : 0;
+                    const growthYoy = prevRev > 0 ? (rev - prevRev) / prevRev : 0;
+                    
+                    const gm = row.Revenue_Millions_USD > 0 ? row.Gross_Profit_Millions_USD / row.Revenue_Millions_USD : 0;
+                    // Cash operating margin proxy (Operating Cash Flow / Revenue)
+                    const om = row.Revenue_Millions_USD > 0 ? row.Operating_Cash_Flow_Millions_USD / row.Revenue_Millions_USD : 0;
+                    const fcfm = row.Revenue_Millions_USD > 0 ? row.Free_Cash_Flow_Millions_USD / row.Revenue_Millions_USD : 0;
+                    
+                    const r40 = growthYoy + fcfm;
+
+                    xs.push(idx);
+                    ys.push(rev);
+
+                    chart_data.push({
+                        fiscal_year: row.Fiscal_Year,
+                        fiscal_period: "FY",
+                        revenue: rev,
+                        gross_margin: gm,
+                        operating_margin: om,
+                        fcf_margin: fcfm,
+                        rule_of_40: r40,
+                        years_since_ipo: idx
+                    });
+                });
+
+                // Compute logistic curve fit parameters in JavaScript
+                const curve = fitLogisticSCurve(xs, ys);
+                
+                // Map fitted values back to our chart dataset
+                chart_data.forEach((d, idx) => {
+                    d.revenue_fitted = curve.fitted[idx];
+                });
+
+                // Update Metadata block
+                document.getElementById("meta-name").innerText = meta.name;
+                document.getElementById("meta-ticker").innerText = `${ticker} | ${meta.sector}`;
+                document.getElementById("meta-sector").innerText = meta.sector;
+                document.getElementById("meta-industry").innerText = meta.industry;
+                document.getElementById("meta-ipo").innerText = meta.ipo;
+                
+                const r2Val = curve.r2 !== null ? `${(curve.r2 * 100).toFixed(1)}%` : "N/A";
+                document.getElementById("meta-r2").innerText = r2Val;
+
+                // Create clickable timeline milestones dynamically based on years
+                const timeline = document.getElementById("milestones-timeline");
+                timeline.innerHTML = "";
+
+                const milestones = [
+                    {
+                        milestone_name: "Inception Baseline",
+                        fiscal_year: chart_data[0].fiscal_year,
+                        fiscal_period: "FY",
+                        revenue_at_milestone: chart_data[0].revenue,
+                        years_since_ipo: 0
+                    }
+                ];
+
+                if (chart_data.length > 2) {
+                    const midIdx = Math.floor(chart_data.length / 2);
+                    milestones.push({
+                        milestone_name: "Lifecycle Midpoint",
+                        fiscal_year: chart_data[midIdx].fiscal_year,
+                        fiscal_period: "FY",
+                        revenue_at_milestone: chart_data[midIdx].revenue,
+                        years_since_ipo: midIdx
+                    });
+                }
+
+                if (chart_data.length > 1) {
+                    const lastIdx = chart_data.length - 1;
+                    milestones.push({
+                        milestone_name: "Current Run-Rate Peak",
+                        fiscal_year: chart_data[lastIdx].fiscal_year,
+                        fiscal_period: "FY",
+                        revenue_at_milestone: chart_data[lastIdx].revenue,
+                        years_since_ipo: lastIdx
+                    });
+                }
+
+                milestones.forEach(m => {
+                    const mDiv = document.createElement("div");
+                    const qIndex = m.years_since_ipo;
+
+                    mDiv.className = "flex items-start gap-2 border-l-2 border-slate-700 pl-3 py-1 relative cursor-pointer hover:bg-slate-800/40 hover:border-emerald-500 rounded-r-lg transition-all group";
+                    mDiv.onclick = () => highlightMilestoneOnChart(qIndex);
+                    
+                    const scaleStr = m.revenue_at_milestone !== null 
+                        ? `$${(m.revenue_at_milestone / 1000000).toFixed(0)}M` 
+                        : "N/A";
+
+                    mDiv.innerHTML = `
+                        <span class="w-2 h-2 bg-slate-700 group-hover:bg-emerald-500 rounded-full absolute -left-[5px] top-[8px] border-2 border-slate-900 shadow-sm transition-colors"></span>
+                        <div class="flex-1">
+                            <h4 class="text-[11px] font-bold text-white group-hover:text-emerald-400 transition-colors leading-snug">${m.milestone_name}</h4>
+                            <p class="text-[9px] text-slate-400">
+                                Year ${m.fiscal_year} | Scale: ${scaleStr} | Age: ${m.years_since_ipo} yrs
+                            </p>
+                        </div>
+                    `;
+                    timeline.appendChild(mDiv);
+                });
+
+                // Render Charts
+                renderScurveChart(chart_data, milestones);
+                renderMarginsChart(chart_data);
+                renderFinancialsTable(ticker);
+
+                // Update Latest KPI Performance Block
+                const latestY = chart_data[chart_data.length - 1];
+                document.getElementById("kpi-gm").innerText = formatPercent(latestY.gross_margin);
+                document.getElementById("kpi-om").innerText = formatPercent(latestY.operating_margin);
+                document.getElementById("kpi-fcf").innerText = formatPercent(latestY.fcf_margin);
+                document.getElementById("kpi-r40").innerText = formatPercent(latestY.rule_of_40);
+
+                // Calculate averages for neighbor matching
+                let avgGM = 0, avgOM = 0, avgFCFM = 0;
+                chart_data.forEach(d => {
+                    avgGM += d.gross_margin;
+                    avgOM += d.operating_margin;
+                    avgFCFM += d.fcf_margin;
+                });
+                avgGM /= chart_data.length;
+                avgOM /= chart_data.length;
+                avgFCFM /= chart_data.length;
+
+                // Find and render the peer neighbor analog
+                const analogs = findMostSimilarAnalog(ticker, avgGM, avgOM, avgFCFM);
+                renderAnalogsGrid({ analogs: analogs, target: { gross_margin: avgGM } });
+
+                // Update Lifecycle Narrative
+                generateNarrative(ticker, meta.name, latestY, curve, chart_data);
+
+            } catch (err) {
+                reportError("Network / Parsing Error", `Failed to load details for ${ticker}. Details: ${err.message}`);
+            }
+        }
+
+        // Click handler to highlight milestone point
+        function highlightMilestoneOnChart(index) {
+            if (scurveChartInstance && index !== -1) {
+                const milestoneIdx = scurveChartInstance.data.datasets.findIndex(d => d.label === 'Significant Milestone');
+                if (milestoneIdx !== -1) {
+                    scurveChartInstance.setActiveElements([
+                        { datasetIndex: 0, index: index },
+                        { datasetIndex: milestoneIdx, index: index }
+                    ]);
+                    scurveChartInstance.update();
+                }
+            }
+        }
+
+        // Calculates qualitative lifecycle descriptions based on client-side fitted parameters
+        function generateNarrative(ticker, companyName, latestY, curve, chartData) {
+            const container = document.getElementById("narrative-content");
+            container.innerHTML = "";
+
+            const currentRevenue = latestY.revenue;
+            const isUnbounded = !curve || curve.L === null || curve.t0 === null || curve.L > (currentRevenue * 8);
+
+            if (isUnbounded) {
+                container.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg text-indigo-400">
+                            <span class="text-[9px] uppercase font-bold block">Current S-Curve Stage</span>
+                            <h4 class="text-xs font-black mt-0.5">Hyper-Growth Ascent</h4>
+                        </div>
+                        <p class="leading-relaxed text-[11px]">
+                            <strong>${companyName} (${ticker})</strong> is currently in an <strong>unbounded growth ascent phase</strong>. 
+                        </p>
+                        <p class="leading-relaxed text-[11px]">
+                            The S-Curve optimizer did not detect standard decelerating carrying capacities. The annual revenue trajectory remains steep and has not yet completed the transition toward structural saturation.
+                        </p>
+                        <div class="p-2.5 bg-slate-800 rounded-lg space-y-1">
+                            <div class="flex justify-between text-[10px] border-b border-slate-700/60 pb-1">
+                                <span class="text-slate-400">Applied Model</span>
+                                <span class="font-bold text-white">Unbounded Exponential</span>
+                            </div>
+                            <div class="pt-1">
+                                <span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">Inflection Point Status</span>
+                                <p class="text-xs text-white">Undetected (Ramp remains linear/exponential)</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const L = curve.L;
+            const t0 = curve.t0;
+            const r2 = curve.r2;
+            const pctOfPeak = currentRevenue / L;
+            const currentAge = latestY.years_since_ipo;
+            const isInflectionPast = t0 < currentAge;
+
+            let stageTitle = "";
+            let stageBadgeClass = "";
+            let stageDesc = "";
+
+            if (pctOfPeak >= 0.85) {
+                stageTitle = "Maturity / Saturation Phase";
+                stageBadgeClass = "text-indigo-400 bg-indigo-500/10 border-indigo-500/20";
+                stageDesc = `The entity has penetrated the vast majority of its theoretical capacity, operating at <strong>${(pctOfPeak*100).toFixed(0)}%</strong> of its S-curve limit. Annual expansion has flattened out, and further scale will likely depend on product adjustments or secondary S-curves.`;
+            } else if (isInflectionPast) {
+                stageTitle = "Post-Inflection Deceleration";
+                stageBadgeClass = "text-amber-400 bg-amber-500/10 border-amber-500/20";
+                stageDesc = `The company has successfully crossed its midpoint of maximum expansion velocity and is operating at <strong>${(pctOfPeak*100).toFixed(0)}%</strong> of its S-curve capacity. While absolute revenue is at historic levels, the annual growth rate is structurally slowing.`;
+            } else {
+                stageTitle = "Mid-Inflection Transition";
+                stageBadgeClass = "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+                stageDesc = `The company is currently traversing the steepest, highest-velocity segment of its S-curve. This is the period of maximum operating leverage, where absolute growth is highly active.`;
+            }
+
+            const inflectionYear = Math.round(t0) + Number(chartData[0].fiscal_year);
+            const inflectionText = isInflectionPast
+                ? `Achieved around fiscal year <strong>${inflectionYear}</strong> (IPO Age: ${t0.toFixed(1)} yrs). The highest absolute acceleration is in the past.`
+                : `Projected to occur around fiscal year <strong>${inflectionYear}</strong> (IPO Age: ${t0.toFixed(1)} yrs).`;
+
+            // Parametric Curve Badges
+            const L_str = `$${(L / 1000000).toFixed(0)}M`;
+            const t0_str = `Yr ${Math.round(t0)} (${inflectionYear})`;
+            const r2_str = `${(r2 * 100).toFixed(1)}%`;
+
+            container.innerHTML = `
+                <div class="space-y-3">
+                    <div class="p-2.5 border rounded-lg ${stageBadgeClass}">
+                        <span class="text-[9px] uppercase font-bold block tracking-wider">Current S-Curve Stage</span>
+                        <h4 class="text-xs font-black mt-0.5">${stageTitle}</h4>
+                    </div>
+
+                    <!-- Parametric Curve Badges -->
+                    <div class="grid grid-cols-3 gap-2 text-center text-[10px] mb-3">
+                        <div class="bg-slate-800/60 p-1.5 rounded-lg border border-slate-800">
+                            <span class="text-[8px] text-slate-400 block uppercase">Peak Cap (L)</span>
+                            <span class="font-black text-white text-xs">${L_str}</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-1.5 rounded-lg border border-slate-800">
+                            <span class="text-[8px] text-slate-400 block uppercase">Midpoint (t0)</span>
+                            <span class="font-black text-indigo-400 text-xs">${t0_str}</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-1.5 rounded-lg border border-slate-800">
+                            <span class="text-[8px] text-slate-400 block uppercase">R-Squared</span>
+                            <span class="font-black text-emerald-400 text-xs">${r2_str}</span>
+                        </div>
+                    </div>
+
+                    <p class="leading-relaxed text-[11px]">
+                        <strong>${companyName} (${ticker})</strong> has a highly structured S-curve with a robust <strong>${r2_str} R² model fit</strong>.
+                    </p>
+                    <p class="leading-relaxed text-[11px]">
+                        It currently operates at a run-rate of <strong>$${(currentRevenue/1000000).toFixed(1)}M/year</strong>, which represents <strong>${(pctOfPeak*100).toFixed(0)}%</strong> of its estimated mathematical S-curve carrying capacity ($${(L/1000000).toFixed(1)}M/year).
+                    </p>
+                    <p class="leading-relaxed text-[11px]">
+                        ${stageDesc}
+                    </p>
+                    <div class="p-2.5 bg-slate-800 rounded-lg space-y-1.5">
+                        <div class="flex justify-between text-[10px] border-b border-slate-700/60 pb-1">
+                            <span class="text-slate-400">Applied Model</span>
+                            <span class="font-bold text-white">3-Parameter Logistic (Symmetric)</span>
+                        </div>
+                        <div class="pt-0.5">
+                            <span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">Inflection Point Timeline</span>
+                            <p class="text-xs text-white leading-normal mt-0.5">${inflectionText}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderScurveChart(chartData, milestones) {
+            if (scurveChartInstance) scurveChartInstance.destroy();
+
+            const labels = chartData.map(d => `${d.fiscal_year}`);
+            const actualRev = chartData.map(d => d.revenue ? d.revenue / 1000000 : null);
+            const hasFittedData = chartData.some(d => d.revenue_fitted !== null && d.revenue_fitted !== undefined);
+            const fittedRev = chartData.map(d => (d.revenue_fitted !== null && d.revenue_fitted !== undefined) ? d.revenue_fitted / 1000000 : null);
+
+            const milestonePoints = chartData.map(d => {
+                const isMilestone = milestones.find(m => m.fiscal_year === d.fiscal_year);
+                return isMilestone ? d.revenue / 1000000 : null;
+            });
+
+            const milestoneLabelMap = chartData.map(d => {
+                const match = milestones.find(m => m.fiscal_year === d.fiscal_year);
+                return match ? match.milestone_name : null;
+            });
+
+            const legendFitItem = document.getElementById("legend-fit-item");
+            if (legendFitItem) {
+                if (hasFittedData) legendFitItem.classList.remove("hidden");
+                else legendFitItem.classList.add("hidden");
+            }
+
+            const datasets = [
+                {
+                    label: 'Actual Revenue ($M)',
+                    data: actualRev,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                    fill: true,
+                    tension: 0.2,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 5
+                }
+            ];
+
+            if (hasFittedData) {
+                datasets.push({
+                    label: 'Fitted S-Curve ($M)',
+                    data: fittedRev,
+                    borderColor: '#6366f1',
+                    borderDash: [5, 5],
+                    tension: 0.2,
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0
+                });
+            }
+
+            const hasMilestones = milestonePoints.some(p => p !== null);
+            if (hasMilestones) {
+                datasets.push({
+                    label: 'Significant Milestone',
+                    data: milestonePoints,
+                    borderColor: 'transparent',
+                    backgroundColor: '#fbbf24',
+                    showLine: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
+                    pointHoverBackgroundColor: '#fbbf24',
+                    pointBorderColor: '#0f172a',
+                    pointBorderWidth: 1.5,
+                    fill: false
+                });
+            }
+
+            const ctx = document.getElementById("scurve-chart").getContext("2d");
+            scurveChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#0f172a',
+                            titleColor: '#fff',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const mTitle = milestoneLabelMap[index];
+                                    
+                                    if (context.dataset.label === 'Significant Milestone' && mTitle) {
+                                        return ` 🎉 Milestone: ${mTitle}`;
+                                    }
+                                    
+                                    const yVal = context.parsed.y !== null && context.parsed.y !== undefined
+                                        ? `$${context.parsed.y.toFixed(0)}M`
+                                        : "N/A";
+                                    return ` ${context.dataset.label.split(' ')[0]}: ${yVal}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 9 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 9 },
+                                callback: function(value) {
+                                    return value >= 1000 ? `$${(value/1000).toFixed(1)}B` : `$${value}M`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMarginsChart(chartData) {
+            if (marginsChartInstance) marginsChartInstance.destroy();
+
+            const labels = chartData.map(d => `${d.fiscal_year}`);
+            const grossMargin = chartData.map(d => d.gross_margin * 100);
+            const operMargin = chartData.map(d => d.operating_margin * 100);
+            const fcfMargin = chartData.map(d => d.fcf_margin * 100);
+            
+            const zeroLine = Array(labels.length).fill(0);
+
+            const ctx = document.getElementById("margins-chart").getContext("2d");
+            marginsChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Gross',
+                            data: grossMargin,
+                            borderColor: '#38bdf8',
+                            tension: 0.25,
+                            borderWidth: 1.5,
+                            fill: false,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Cash Oper',
+                            data: operMargin,
+                            borderColor: '#10b981',
+                            tension: 0.25,
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'FCF',
+                            data: fcfMargin,
+                            borderColor: '#f59e0b',
+                            tension: 0.25,
+                            borderWidth: 1.5,
+                            fill: false,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Zero Line',
+                            data: zeroLine,
+                            borderColor: 'rgba(239, 68, 68, 0.85)', 
+                            borderWidth: 1.5,
+                            borderDash: [5, 5],                    
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            showLine: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#94a3b8',
+                                font: { size: 9 },
+                                boxWidth: 12,
+                                filter: function(item) {
+                                    return item.text !== 'Zero Line';
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#0f172a',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.label === 'Zero Line') return null;
+                                    const yVal = context.parsed.y !== null && context.parsed.y !== undefined
+                                        ? `${context.parsed.y.toFixed(1)}%`
+                                        : "N/A";
+                                    return ` ${context.dataset.label}: ${yVal}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 9 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            min: -100,
+                            max: 100,
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 9 },
+                                callback: function(value) { return `${value}%`; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderAnalogsGrid(analogsData) {
+            const container = document.getElementById("analogs-container");
+            container.innerHTML = "";
+
+            const analogs = analogsData.analogs;
+
+            if (!analogs || analogs.length === 0 || !analogsData.target.gross_margin) {
+                container.innerHTML = `<p class="text-slate-400 text-center text-xs py-4">No matching peer analogs found.</p>`;
+                return;
+            }
+
+            const analog = analogs[0];
+            
+            const scoreStr = analog.similarity_score !== null 
+                ? `${analog.similarity_score.toFixed(1)}% Match` 
+                : "N/A Match";
+            const barWidth = analog.similarity_score !== null ? analog.similarity_score : 0;
+            const barColor = analog.similarity_score >= 90 
+                ? "bg-emerald-500" 
+                : (analog.similarity_score >= 80 ? "bg-indigo-500" : "bg-amber-500");
+
+            const growthStr = formatPercent(analog.revenue_growth_yoy);
+            const grossStr = formatPercent(analog.gross_margin);
+            const operStr = formatPercent(analog.operating_margin);
+            const fcfStr = formatPercent(analog.fcf_margin);
+
+            container.innerHTML = `
+                <div class="space-y-2 flex-1 flex flex-col justify-between">
+                    <!-- Top Header Stats -->
+                    <div class="flex items-center justify-between text-[11px] font-bold text-white leading-none">
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-sm font-black text-white tracking-wide">${analog.ticker}</span>
+                            <span class="text-[9px] text-slate-400 font-normal">(FY ${analog.fiscal_year})</span>
+                        </div>
+                        <span class="text-[11px] font-extrabold text-emerald-400">${scoreStr}</span>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-full h-1 bg-slate-800/80 rounded-full">
+                        <div class="h-1 ${barColor} rounded-full transition-all duration-500" style="width: ${barWidth}%"></div>
+                    </div>
+
+                    <!-- 4-Box Metric Mirror -->
+                    <div class="grid grid-cols-2 gap-2 text-center text-[10px] pt-1">
+                        <div class="bg-slate-800/40 p-1.5 rounded-lg border border-slate-800 flex flex-col justify-center">
+                            <span class="text-[8px] text-slate-400 block uppercase">YoY Growth</span>
+                            <span class="font-bold text-slate-200 text-xs">${growthStr}</span>
+                        </div>
+                        <div class="bg-slate-800/40 p-1.5 rounded-lg border border-slate-800 flex flex-col justify-center">
+                            <span class="text-[8px] text-slate-400 block uppercase">Gross Margin</span>
+                            <span class="font-bold text-slate-200 text-xs">${grossStr}</span>
+                        </div>
+                        <div class="bg-slate-800/40 p-1.5 rounded-lg border border-slate-800 flex flex-col justify-center">
+                            <span class="text-[8px] text-slate-400 block uppercase">Oper Margin</span>
+                            <span class="font-bold text-emerald-400 text-xs">${operStr}</span>
+                        </div>
+                        <div class="bg-slate-800/40 p-1.5 rounded-lg border border-slate-800 flex flex-col justify-center">
+                            <span class="text-[8px] text-slate-400 block uppercase">FCF Margin</span>
+                            <span class="font-bold text-amber-500 text-xs">${fcfStr}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
