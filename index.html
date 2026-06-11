@@ -46,14 +46,6 @@
         </div>
         
         <div class="flex items-center gap-4">
-            <!-- Manual CSV Loader Button -->
-            <div class="flex items-center gap-2">
-                <span class="text-xs text-slate-400">Database Source:</span>
-                <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
-                <button onclick="document.getElementById('csv-file-input').click()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg transition-all">
-                    Load CSV File
-                </button>
-            </div>
             <div class="flex items-center gap-2">
                 <span class="text-xs text-slate-400">Select Company:</span>
                 <select id="company-selector" onchange="loadCompanyData(this.value)" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg focus:ring-emerald-500 focus:border-emerald-500 p-2 outline-none cursor-pointer">
@@ -140,7 +132,7 @@
                     </div>
                 </div>
 
-                <!-- NEW: Dynamic Feedback & Ticker Request Box -->
+                <!-- Dynamic Feedback & Ticker Request Box -->
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
                     <h3 class="text-xs font-bold text-white mb-1.5 flex items-center gap-1.5 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
@@ -148,8 +140,8 @@
                     </h3>
                     <p class="text-[9px] text-slate-400 mb-3">Request new stock tickers or suggest dashboard improvements</p>
                     
-                    <!-- FormSubmit static endpoint config -->
-                    <form action="https://formsubmit.co/cezarjj@gmail.com" method="POST" target="_blank" class="space-y-2">
+                    <!-- FormSubmit static endpoint config (Replace your-email@domain.com with your actual email) -->
+                    <form action="https://formsubmit.co/your-email@domain.com" method="POST" target="_blank" class="space-y-2">
                         <input type="hidden" name="_captcha" value="false">
                         
                         <div>
